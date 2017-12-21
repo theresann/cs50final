@@ -1,0 +1,46 @@
+Writing Mate is a tool to help writers catch basic stylistic errors in their work, such as the use of weak vocabulary and 
+filler words, that would be tedious and time-consuming to catch otherwise. It does not automatically correct these potential 
+errors, however, since it is important to allow writers to retain control over their work; rather, the app simply offers 
+suggestions that writers can choose to either use or disregard. This app does not deal with spelling errors or grammatical 
+errors, since most word processing programs already have those capabilities, and instead focuses on the stylistic errors 
+that can be harder to detect but can make writing truly great.
+
+
+The project is located in ~/workspace/project, which has two more folders within it, called templates and uploads and the 
+following files are necessary for this app to run:
+
+
+Located in /project/templates:
+	apology.html 
+	index1.html
+	suggestions.html
+
+
+Located in /project:
+	application.py
+	commonwords.txt
+	requirements.txt
+
+
+Furthermore, all of the items in requirements.txt need to be installed; this can be done by running :
+
+    pip install --user -r requirements.txt
+    
+in the terminal while within the project directory.
+
+
+The uploads folder is initially empty, but it needs to exist so that uploaded files can be saved there.
+
+
+Then, start flask, also making sure that you are in the project directory, by running the command:
+
+
+flask run
+
+
+Once flask has been started, you will be able to access Writing Mate through the web server of the IDE. From there, in order 
+to use the app, using the “Upload file” button, you will need to upload a file from your computer that you want to check for 
+errors to the web site. This file needs to be a text file. A sample text file named “test.txt” has been provided in the 
+project directory for testing purposes, but you will need to download this file to your own computer in order to upload it 
+to the server. Once you have chosen a file to upload, click the “Next” button to get to the suggested edits! If no text file 
+has been provided, an error page will be shown. 

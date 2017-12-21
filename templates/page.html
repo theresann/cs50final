@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        $(function(){
+            var content = Handlebars.compile(text);
+        })
+    </script>
+    <title>
+        Suggestions
+    </title>
+    <style>
+        body{
+            margin: 50px 50px 50px 50px;
+        }
+        a{
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+    <hr><br>
+    <p id="main">{{message}}</p>
+    <br><br><hr>
+    <a href="{{ url_for('index') }}"> Return to index </a>
+</body>
+</html>

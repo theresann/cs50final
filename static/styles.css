@@ -1,0 +1,67 @@
+
+                body{
+                    margin: 50px 50px 50px 50px;
+                }
+            modal.dialog0, modal.dialog1, modal.dialog2, modal.dialog3, modal.dialog4
+                {
+                    position: fixed;
+                    font-family: Arial, Helvetica, sans-serif;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    background: rgba(0,0,0,0.3);
+                    z-index: 99999;
+                    opacity:0;
+                    color: black;
+                    -webkit-transition: opacity 100ms ease-in;
+                    -moz-transition: opacity 100ms ease-in;
+                    transition: opacity 100ms ease-in;
+                    pointer-events: none;
+                }
+            modal.dialog0.show, modal.dialog1.show, modal.dialog2.show, modal.dialog3.show, modal.dialog4.show
+            {
+                opacity:1;
+                pointer-events: auto;
+            }
+            modal.dialog0:target, modal.dialog1:target, modal.dialog2:target, modal.dialog3:target, modal.dialog4:target
+            {
+                opacity:1;
+                pointer-events: auto;
+            }
+            modal.dialog0 div, modal.dialog1 div, modal.dialog2 div, modal.dialog3 div, modal.dialog4 div
+            {
+                width: 230px;
+                position: relative;
+                margin: 10% auto;
+                padding: 16px 20px 21px 20px;
+                border-radius: 4px;
+                background: #fff;
+                border: 2px white solid;
+            }
+            modal.dialog0 p, modal.dialog1 p, modal.dialog2 p, modal.dialog3 p, modal.dialog4 p
+    		{
+                color: black;
+                text-shadow: none;
+                text-transform: none;
+                font-size: 14px;
+            }
+            
+            .close {
+                background: black;
+                color: white;
+                line-height: 24px;
+                position: absolute;
+                right: -12px;
+                text-align: center;
+                top: -10px;
+                width: 26px;
+                text-decoration: none;
+                font-weight: bold;
+                border: 1px solid #666;
+                border-radius: 12px;
+                box-shadow: 1px 1px 3px #000;
+            }
+            
+            .close:hover { background: #aaa; }
+            

@@ -1,0 +1,39 @@
+The app that I created is controlled with a combination of Python, Javascript, and HTML/CSS.
+
+Application.py for the most part determines the relationships between the different files and parts of the project. In this file, 
+the application is first of all compiled. Then, one main route is defined; there is only one because my project was focused more on
+the back-end part, rather than the front end part, and I decided that only 3 pages are necessary to convey the information that
+I needed to convey: one page for the file upload, one page for the suggestions, and one page if anything goes wrong. The python
+file not only defines the routes taken between these pages, but also saves the uploaded file and determines the most frequently
+used words in it, both of which are used in the suggestions page. For the determination of the most frequently used words, I first
+convert the text into a list of strings, all of which are in lower case. The list is convenient because it's far easier to search
+through a list than it is to search through a long string. Furthermore, it was necessary that all of the strings are in lower
+case, since the sentence "The cat went to the mall" has two occurences of the word cat, but they would not register as being the
+same if the cases were not changed. The method that I used to do this, re.findall, also isolated just the words, so that 
+punctuation, and thus a word's position in a sentence does not alter the number of times it is counted in a file. I then used the
+Counter object, which is a list of tuples, to get the 12 most frequently used words in the file. The number 12 was found through
+trial and error, since in the next part, I create a new list and disregard words like "a" and "the" which naturally show up many
+times in text and do not signify redundancy; therefore, the number had to be large enough to get to the actually redundant rather
+than just widely used words but not too large that it crosses into the realm of words that are not at all redundant because
+they are not used often in the text. I then pass both the contents of the text file and these potentially redundant words into
+suggestions.html.
+
+I will now go into the three html templates used by this application, starting with the two simpler ones. The main page for the
+app is the index page, whose template is index1.html. This page simply welcomes the user to the application and allows them to
+upload and submit a text file to be checked. The simplest of the files in my project would be apology.html, which is rendered
+when the user fails to submit a text file (something that is checked by the python code); this page informs them of this and
+allows them to go back to the index to submit again. Both pages are styled similarly, with an orangey coral background and bold
+white letters to make the content really pop on the page. They are also purposefully simple to avoid the unappealing look of
+clutter and also to avoid overwhelming the user.
+
+The bulk of the code, particularly the challenging bits of code, are found in suggestions.html. The layout of this template is a
+bold title on top, a description of what the colors and highlighting mean in the marked up text, the marked up text itself, 
+pop-up boxes that appear when one of those markings is clicked on, and a button to return to the index page. The marking up of
+the text is done by taking the text input from the python file, turning it into an array, and then iterating through that array,
+wrapping each filler word, weak vocabulary word, or redundant word with the appropriate tags to color/highlight them and allow
+them to be clicked on to show the suggested plan action. For the filler words and weak vocabulary words, I read a lot of internet
+articles on words you should not use in your writing and then categorized them as I saw fit. The redundant words are found using
+the process already described. For the weak vocabulary words and redundant words, the suggestion box shows 10 synonyms of the
+word that could potentially be used instead, and I got those synonyms by using the Wordnik API. The suggestion boxes show up due to
+Javascript and are styled through HTML and CSS. I lastly added a link back to the index to enhance the user experience and 
+make the app easy to navigate.

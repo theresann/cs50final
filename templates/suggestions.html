@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 50px 50px 50px 50px;
+            background: #FF7A5A;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        h1 {
+            color: white;
+            font-size: 70px;
+            text-align: center;
+        }
+        p {
+            color: white;
+            font-size: 20px;
+            text-align: center;
+        }
+        
+        /*styling for pop-up boxes*/
+        .modal-dialog {
+            position: fixed;
+            display: flex;
+            font-family: Arial, Helvetica, sans-serif;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 99999;
+            opacity:0;
+            color: black;
+            -webkit-transition: opacity 100ms ease-in;
+            -moz-transition: opacity 100ms ease-in;
+            transition: opacity 100ms ease-in;
+            pointer-events: none;
+        }
+        .modal-dialog > div {
+            position: relative;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            max-width: 80%;
+        }
+        .modal-dialog.show {
+            opacity:1;
+            pointer-events: auto;
+        }
+        .modal-dialog:target {
+            opacity:1;
+            pointer-events: auto;
+        }
+        .close {
+            background: black;
+            color: white;
+            line-height: 24px;
+            position: absolute;
+            right: -12px;
+            text-align: center;
+            top: -10px;
+            width: 26px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 1px solid #666;
+            border-radius: 12px;
+            box-shadow: 1px 1px 3px #000;
+        }
+        
+        .close:hover { background: #aaa; }
+        
+        /* make weak vocab red*/
+        word- {
+            color: red;
+        }
+        
+        /* make filler words blue*/
+        word1- {
+            color: blue;
+        }
+        
+        /*styling for box that text is contained in*/
+        #outside {
+            background: white;
+            border: 2px solid #808080;
+            border-radius: 4px;
+            padding: 30px;
+        }
+        
+        /* styling for the text itself*/
+        text- {
+            line-height: 2;
+        }
+        
+        /* styling for the index button*/
+        span{
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #FF7A5A;
+            font-size:20px;
+        }
+        .button {
+            
+            border: 2px solid white;
+            border-radius: 2px;
+            background-color: white ;
+            display: inline-block;
+            width: 180px;
+            height: 30px;
+            text-align:center;
+            cursor: pointer;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        #index-button {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        /* effectively hides this portion of text */
+        red- {
+            font-size: 5px;
+            color:#FF7A5A;
+        }
+    </style>
+    
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        jQuery(document).ready(function($){
+            
+            // Defines function that uses wordnik API in order to get synonyms
+            var baseUrl = "https://api.wordnik.com/v4/word.json/";
+    		var apiKey = "44292d2d0bb36bdb80001084ac6037c2947d0b87460c1fb95";
+    		function getSynonyms(theWord, callback) {
+    			var url = baseUrl + theWord + "/relatedWords?useCanonical=true&relationshipTypes=synonym&limitPerRelationshipType=100&api_key=" + apiKey;
+    			var jxhr = $.ajax ({ 
+    				url: url,
+    				dataType: "text" , 
+    				timeout: 30000 
+    			}) 
+    			.success (function (data, status) { 
+    				var array = JSON.parse(data);
+    				console.log (data);
+    				callback(array [0].words)
+    			}) 
+    			.error (function (status) { 
+    				console.log ("getSynonyms: url == " + url + ", error == " + JSON.stringify (status, undefined, 4));
+    			});
+    		};
+    		
+            // // makes pop-up box appear when a word with the <word-> tag is clicked on
+            // $("word-").click(function () {
+            //     console.log("hi");
+            //     var word = $(this).text();
+            //     getSynonyms(word, function(synonyms) {
+            //         $("#info-modal").addClass('show');
+            //         var list = synonyms.slice(0,7)
+            //         $('#synonym-list').empty()
+            //         list.forEach(function(word) {
+            //             $('#synonym-list').append($('<li>'+word+'</li>'));
+            //         });
+            //     });
+            // });
+            
+            // $("word1-").click(function () {
+            //     console.log("hi");
+            //     $("#info-modal").addClass('show');
+            // });
+            
+            // closes pop-up box when the x is clicked
+            $(".modal-dialog .close").click(function(){
+                $(this).closest(".modal-dialog").removeClass("show");
+            });
+            
+        });
+    </script>
+    <title>Suggestions</title>
+</head>
+
+<body>
+    <h1>Suggestions</h1>
+    <p>Blue words are typically filler words; there's a good chance these words should be omitted. 
+    Red words are weak vocabulary words; they can potentially be replaced with a synonym that is more specific or striking.
+    Highlighted words are potentially redundant; they can also be replaced to create more variety.</p>
+    <red->{{common}}</red->
+    <div id="outside">
+        <text->{{ text }}</text->
+        <script>
+                // gets words from the text from the file and puts them in an array
+                var textWords = $('text-').text().split(' ');
+                
+                // defines list of words considered to be weak vocabulary words
+                var weakVocab = ["smart", "bad", "sad", "scared", "happy", "important", "stuff", "nice", "big", "small", "good",
+                    "thing", "almost", "hard", "difficulty", "get", "tall"];
+                    
+                // defines list of words considered to be filler words
+                var fillerWords = ["literally", "just", "only", "very", "really", "quite", "totally", "basically", 
+                    "feel", "think", "like", "that", "always", "never", "so", "many", "various", "got", "seem", "seems"];
+                
+                // defines list of most common words
+                var mostCommon = $('red-').text().split(' ')
+                
+                // empty array to hold the text after it is formatted by the following loop
+                var formattedWords = [];
+                
+                // goes through each word of textWords
+                textWords.forEach(function(word) {
+                    // If word exists in weakVocab, wraps word in <word-> tag
+                    if (weakVocab.indexOf(word) != -1) {
+                        var new_word = ["<word->", word, "</word->"];
+                        word = new_word.join("");
+                    }
+                    // if word exists in fillerWords, wraps word in <word1-> tag
+                    else if (fillerWords.indexOf(word) != -1) {
+                        var new_word = ["<word1->", word, "</word1->"];
+                        word = new_word.join("");
+                    }
+                    else if (mostCommon.indexOf(word) != -1) {
+                        var new_word = ["<mark>", "<com->", word, "</com->","</mark>"]
+                        word = new_word.join("")
+                    }
+                    // adds formatted word to the array
+                    formattedWords.push(word);
+            
+            // joins array together and substitutes it for the text in the <text-> portion
+            $('text-').html(formattedWords.join(' '));
+            });
+            
+            var baseUrl = "https://api.wordnik.com/v4/word.json/";
+    		var apiKey = "44292d2d0bb36bdb80001084ac6037c2947d0b87460c1fb95";
+    		function getSynonyms(theWord, callback) {
+    			var url = baseUrl + theWord + "/relatedWords?useCanonical=true&relationshipTypes=synonym&limitPerRelationshipType=100&api_key=" + apiKey;
+    			var jxhr = $.ajax ({ 
+    				url: url,
+    				dataType: "text" , 
+    				timeout: 30000 
+    			}) 
+    			.success (function (data, status) { 
+    				var array = JSON.parse(data);
+    				console.log (data);
+    				callback(array [0].words)
+    			}) 
+    			.error (function (status) { 
+    				console.log ("getSynonyms: url == " + url + ", error == " + JSON.stringify (status, undefined, 4));
+    			});
+    		};
+            
+            // makes pop-up box appear when a word with the <word-> tag is clicked on
+            $("word-").click(function () {
+                console.log("hi");
+                var word = $(this).text();
+                getSynonyms(word, function(synonyms) {
+                    $("#info-modal").addClass('show');
+                    var list = synonyms.slice(0,10)
+                    $('#synonym-list').empty()
+                    list.forEach(function(word) {
+                        $('#synonym-list').append($('<li>'+word+'</li>'));
+                    });
+                });
+            });
+            
+            $("word1-").click(function () {
+                $("#info-modal2").addClass('show');
+            });
+            
+            $("com-").click(function () {
+                var word = $(this).text();
+                getSynonyms(word, function(synonyms) {
+                    $("#info-modal3").addClass('show');
+                    var list = synonyms.slice(0,10)
+                    $('#synonym-list1').empty()
+                    list.forEach(function(word) {
+                        $('#synonym-list1').append($('<li>'+word+'</li>'));
+                    });
+                });
+            });
+            
+        </script>
+        <!--defines what is in the pop-up boxes-->
+        <div id="info-modal" class="modal-dialog">
+            <div>
+                <a href="#close" title="Close" class="close">x</a>
+                <h2>This is a weak vocabulary word!</h2>
+                <p style="color:black; text-align:left; font-size:16px;">Consider these synonyms:</p>
+                <div id="synonym-list"></div>
+            </div>
+        </div>
+        <div id="info-modal2" class="modal-dialog">
+            <div>
+                <a href="#close" title="Close" class="close">x</a>
+                <h2>This is filler word!</h2>
+                <p style="color:black; text-align:left; font-size:16px;">Consider omitting it from your writing</p>
+            </div>
+        </div>
+        <div id="info-modal3" class="modal-dialog">
+            <div>
+                <a href="#close" title="Close" class="close">x</a>
+                <h2>This word is used frequently here!</h2>
+                <p style="color:black; text-align:left; font-size:16px;">Consider these synonyms:</p>
+                <div id="synonym-list1"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <!--button to return to the index-->
+    <div id="index-button">
+        <a id="submit-button" href="https://ide50-nguyenn.cs50.io/">
+            <button class="button" type="submit">
+                <span>Index</span>
+            </button>
+        </a>
+    </div>
+</body>
+</html>
+ 
+ 

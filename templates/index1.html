@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta name="viewport" content="user-scalable=no,width=device-width" />
+    
+    <style>
+    
+        body {
+            background-color: #FF7A5A;
+        }
+        
+        h1, h2 {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: white;
+            text-align:center;
+        }
+        
+        h1 {
+            font-size:100px;
+        }
+        
+        h2 {
+            font-size:18px;
+        }
+        
+        div {
+            text-align: center;
+            padding: 10px;
+            margin: auto;
+        }
+        
+        form {
+            border: none;
+        }
+        
+        /* Styling for buttons */
+        input[type="file"] {
+            display: none;
+        }
+        span{
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #FF7A5A;
+            font-size:20px;
+        }
+        .button {
+            border: 2px solid white;
+            border-radius: 2px;
+            background-color: white ;
+            display: inline-block;
+            width: 180px;
+            height: 30px;
+            text-align:center;
+            cursor: pointer;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+    
+    </style>
+</head>
+<body>
+  <form action="/" method="post" enctype="multipart/form-data">
+      <h1>WELCOME TO <br> WRITING MATE</h1>
+      <h2>Here to lend a helping hand in your proofreading process! <br>
+      Please upload a file to continue.</h2>
+      <br>
+      <!--file upload button -->
+      <div>
+          <label for="file-upload" class="button">
+              <span>Upload File</span>
+          </label>
+          <input id="file-upload" type="file" name='file' />
+      </div>
+      <!--Next button -->
+      <div>
+          <a id="submit-button" href="https://ide50-nguyenn.cs50.io/">
+              <button class="button" type="submit">
+                  <span>Next</span>
+              </button>
+          </a>
+      </div>
+  </form>
+</body>
+</html>
